@@ -28,8 +28,8 @@ To calculate the mean total number of steps per day (ignoring missing values), w
 
 ```{r CalculateMean}
 # Find the total number of steps per day
-totalSteps <- activity %>% group_by(date) %>% 
-        summarise(steps=sum(steps, na.rm=TRUE))
+totalSteps <- activity %>% filter(!is.na(steps)) %>% group_by(date) %>% 
+        summarise(steps=sum(steps))
 # Calculate the mean
 meanSteps <- round(mean(totalSteps$steps))
 # Calculate the median
@@ -41,7 +41,7 @@ p <- ggplot(data = totalSteps, aes(x = steps)) + geom_histogram() +
 suppressMessages(print(p))
 ```
 
-The histogram shows two main peaks to the data, at 0 steps (presumably during nighttime hours) and another centered at 10000. The mean number of steps taken per day is `r meanSteps` and the median number of steps is `r medianSteps`, consistent with the histogram.
+The histogram shows a single main peak centered at 10000 steps. The mean number of steps taken per day is `r meanSteps` and the median number of steps is `r medianSteps`, consistent with the histogram.
 
 ## What is the average daily activity pattern?
 
@@ -49,8 +49,8 @@ To calculate the average daily activity pattern (again, ignoring missing data), 
 
 ```{r ShowDailyActivity} 
 # Calculate the mean for each interval
-dailyActivity <- activity %>% group_by(interval) %>% 
-        summarise(steps=mean(steps, na.rm=TRUE))
+dailyActivity <- activity %>% filter(!is.na(steps)) %>% group_by(interval) %>% 
+        summarise(steps=mean(steps))
 # Calculate the interval with the greatest number of steps, on average
 maxInterval <- filter(dailyActivity, steps==max(steps))$interval
 # Plot
@@ -89,7 +89,7 @@ p <- ggplot(data=totalImputedSteps, aes(x=steps)) + geom_histogram() +
 suppressMessages(print(p))
 ```
 
-Using this strategy, we have filled in all `r missing` missing values and determined a new mean of `r imputedMeanSteps` steps and median `r imputedMedianSteps`. This is slightly higher than our previous mean and median, `r meanSteps` and `r medianSteps` respectively. Our histogram also no longer shows such a prominent spike at 0.
+Using this strategy, we have filled in all `r missing` missing values and determined a new mean of `r imputedMeanSteps` steps and median `r imputedMedianSteps`. This is very slightly higher than our previous mean and median, `r meanSteps` and `r medianSteps` respectively, but otherwise the two histograms show an almost indistinguishable pattern. 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 

@@ -25,8 +25,8 @@ To calculate the mean total number of steps per day (ignoring missing values), w
 
 ```r
 # Find the total number of steps per day
-totalSteps <- activity %>% group_by(date) %>% 
-        summarise(steps=sum(steps, na.rm=TRUE))
+totalSteps <- activity %>% filter(!is.na(steps)) %>% group_by(date) %>% 
+        summarise(steps=sum(steps))
 # Calculate the mean
 meanSteps <- round(mean(totalSteps$steps))
 # Calculate the median
@@ -40,7 +40,7 @@ suppressMessages(print(p))
 
 ![](PA1_template_files/figure-html/CalculateMean-1.png) 
 
-The histogram shows two main peaks to the data, at 0 steps (presumably during nighttime hours) and another centered at 10000. The mean number of steps taken per day is 9354 and the median number of steps is 10395, consistent with the histogram.
+The histogram shows a single main peak centered at 10000 steps. The mean number of steps taken per day is 10766 and the median number of steps is 10765, consistent with the histogram.
 
 ## What is the average daily activity pattern?
 
@@ -49,8 +49,8 @@ To calculate the average daily activity pattern (again, ignoring missing data), 
 
 ```r
 # Calculate the mean for each interval
-dailyActivity <- activity %>% group_by(interval) %>% 
-        summarise(steps=mean(steps, na.rm=TRUE))
+dailyActivity <- activity %>% filter(!is.na(steps)) %>% group_by(interval) %>% 
+        summarise(steps=mean(steps))
 # Calculate the interval with the greatest number of steps, on average
 maxInterval <- filter(dailyActivity, steps==max(steps))$interval
 # Plot
@@ -94,7 +94,7 @@ suppressMessages(print(p))
 
 ![](PA1_template_files/figure-html/ImputeValues-1.png) 
 
-Using this strategy, we have filled in all 2304 missing values and determined a new mean of 10821 steps and median 11015. This is slightly higher than our previous mean and median, 9354 and 10395 respectively. Our histogram also no longer shows such a prominent spike at 0.
+Using this strategy, we have filled in all 2304 missing values and determined a new mean of 10821 steps and median 11015. This is very slightly higher than our previous mean and median, 10766 and 10765 respectively, but otherwise the two histograms show an almost indistinguishable pattern. 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
