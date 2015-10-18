@@ -92,7 +92,7 @@ p3 <- ggplot(data=totalImputedSteps, aes(x=steps)) + geom_histogram() +
 suppressMessages(plot_grid(p1, p3, nrow=2, align="hv"))
 ```
 
-Using this strategy, we have filled in all `r missing` missing values and determined a new mean of `r imputedMeanSteps` steps and median `r imputedMedianSteps`. This is very slightly higher than our previous mean and median, `r meanSteps` and `r medianSteps` respectively, but otherwise the two histograms show a very similar pattern.
+Using this strategy, we have filled in all `r missing` missing values and determined a new mean of `r imputedMeanSteps` steps and median `r imputedMedianSteps`. This is very slightly higher than our previous mean and median, `r meanSteps` and `r medianSteps` respectively, but otherwise the two histograms show a similar pattern.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
