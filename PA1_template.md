@@ -9,9 +9,12 @@ We load the libraries required for our analysis and then the activity data itsel
 # Set global options for displaying numbers
 options(scipen=1, digits = 0)
 # Load necessary libraries
-suppressMessages(library(dplyr))
-library(lubridate)
-library (ggplot2)
+suppressMessages( {
+        library(dplyr)
+        library(lubridate)
+        library(ggplot2)
+        library(cowplot)
+        }) 
 # Read the data, assumed to be in the same directory
 activity <- read.csv("activity.csv", stringsAsFactors = FALSE) %>% 
         # Convert date field
@@ -32,10 +35,10 @@ meanSteps <- round(mean(totalSteps$steps))
 # Calculate the median
 medianSteps <- round(median(totalSteps$steps))
 # Make a histogram
-p <- ggplot(data = totalSteps, aes(x = steps)) + geom_histogram() +
-        ggtitle("Histogram of Total Steps (Original)") +
+p1 <- ggplot(data = totalSteps, aes(x = steps)) + geom_histogram() +
+        ggtitle("Histogram Of Total Steps (Original)") +
         xlab("Total Steps (Original)") + ylab("Count")
-suppressMessages(print(p))
+suppressMessages(print(p1))
 ```
 
 ![](PA1_template_files/figure-html/CalculateMean-1.png) 
@@ -54,14 +57,14 @@ dailyActivity <- activity %>% filter(!is.na(steps)) %>% group_by(interval) %>%
 # Calculate the interval with the greatest number of steps, on average
 maxInterval <- filter(dailyActivity, steps==max(steps))$interval
 # Plot
-p <- ggplot(data=dailyActivity, aes(interval, steps)) + geom_line() + 
+p2 <- ggplot(data=dailyActivity, aes(interval, steps)) + geom_line() + 
        labs(title="Average Daily Activity", x="Interval", y="Steps")
-print(p)
+print(p2)
 ```
 
 ![](PA1_template_files/figure-html/ShowDailyActivity-1.png) 
 
-The most activity, averaged across all days, is observed for the interval 835 (presumably while the subject is commuting to work, either on foot or by public transportation). As expected, the nighttime hours are relatively devoid of activity.
+The most activity, averaged across all days, is observed for the interval 835 (presumably while the subject is commuting to work/school, either on foot or by public transportation). Activity is highest in the daytime hours, tapering off towards evening and virtually ceasing at night.
 
 ## Imputing missing values
 
@@ -85,16 +88,16 @@ totalImputedSteps <- imputedActivity %>% group_by(date) %>%
 # Calculate mean and median
 imputedMeanSteps <- round(mean(totalImputedSteps$steps))
 imputedMedianSteps <- round(median(totalImputedSteps$steps))
-# Now plot and compare with original dataset
-p <- ggplot(data=totalImputedSteps, aes(x=steps)) + geom_histogram() +
-        ggtitle("Histogram of Total Steps (Imputed)") + 
+# Now plot both histograms side-by-side
+p3 <- ggplot(data=totalImputedSteps, aes(x=steps)) + geom_histogram() +
+        ggtitle("Histogram Of Total Steps (Imputed)") + 
         xlab("Total Steps (Imputed)") + ylab("Count")
-suppressMessages(print(p))
+suppressMessages(plot_grid(p1, p3, nrow=2, align="hv"))
 ```
 
 ![](PA1_template_files/figure-html/ImputeValues-1.png) 
 
-Using this strategy, we have filled in all 2304 missing values and determined a new mean of 10821 steps and median 11015. This is very slightly higher than our previous mean and median, 10766 and 10765 respectively, but otherwise the two histograms show an almost indistinguishable pattern. 
+Using this strategy, we have filled in all 2304 missing values and determined a new mean of 10821 steps and median 11015. This is very slightly higher than our previous mean and median, 10766 and 10765 respectively, but otherwise the two histograms show a very similar pattern.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -109,10 +112,10 @@ imputedActivityByDayType <- imputedActivity %>% ungroup %>%
         # Summarize average steps for each interval for both weekday and weekend
         group_by(day.type, interval) %>% summarize(steps=mean(steps))
 # Plot
-p <- ggplot(data=imputedActivityByDayType, aes(interval, steps)) + geom_line() + 
+p4 <- ggplot(data=imputedActivityByDayType, aes(interval, steps)) + geom_line() + 
         facet_grid(.~day.type) + ggtitle("Average Activity (Imputed)") + 
         xlab("Interval") + ylab("Steps")
-print(p)
+print(p4)
 ```
 
 ![](PA1_template_files/figure-html/FindDailyPatterns-1.png) 
