@@ -117,4 +117,4 @@ print(p)
 
 ![](PA1_template_files/figure-html/FindDailyPatterns-1.png) 
 
-As expected, we see a clear difference between weekdays and weekends. The subject's morning spike occurs later on weekend mornings and is less prominent, appears to be more active during the day on weekends as well as later into the evenings.
+As expected, we see a clear difference between weekdays and weekends. The subject's morning spike occurs later on weekend mornings (presumably sleeping in on the weekends) and is less prominent. The subject also appears to be more active during the day on weekends as well as later into the evenings, presumably staying up later on the weekends.
